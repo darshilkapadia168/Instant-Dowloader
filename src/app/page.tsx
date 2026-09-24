@@ -100,10 +100,10 @@ export default function Home() {
           </div>
 
           {/* Main Card */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 md:p-8 shadow-2xl transition-all duration-300 relative z-10">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl transition-all duration-300 relative z-10">
             <form onSubmit={handleFetch} className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                <LinkIcon className="h-6 w-6 text-zinc-500 group-focus-within:text-white transition-colors" />
+              <div className="absolute inset-y-0 left-0 pl-4 sm:pl-5 flex items-center pointer-events-none">
+                <LinkIcon className="h-5 w-5 sm:h-6 sm:w-6 text-zinc-500 group-focus-within:text-white transition-colors" />
               </div>
               <input
                 type="url"
@@ -111,15 +111,15 @@ export default function Home() {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="Paste Instagram link here..."
-                className="block w-full pl-14 pr-32 py-5 bg-black border border-zinc-800 rounded-2xl text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-all text-lg"
+                className="block w-full pl-12 sm:pl-14 pr-[90px] sm:pr-32 py-4 sm:py-5 bg-black border border-zinc-800 rounded-xl sm:rounded-2xl text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-all text-base sm:text-lg"
               />
-              <div className="absolute inset-y-2 right-2">
+              <div className="absolute inset-y-1.5 right-1.5 sm:inset-y-2 sm:right-2">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="h-full px-8 bg-white hover:bg-gray-200 text-black font-bold rounded-xl transition-transform transform hover:scale-105 active:scale-95 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="h-full px-5 sm:px-8 bg-white hover:bg-gray-200 text-black text-sm sm:text-base font-bold rounded-lg sm:rounded-xl transition-transform transform hover:scale-105 active:scale-95 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
-                  {loading ? <Loader2 className="w-6 h-6 animate-spin text-black" /> : "Fetch"}
+                  {loading ? <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin text-black" /> : "Fetch"}
                 </button>
               </div>
             </form>
