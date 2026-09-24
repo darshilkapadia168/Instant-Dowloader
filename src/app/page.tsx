@@ -18,6 +18,11 @@ export default function Home() {
     setError("");
     setMedia([]);
     setMediaType(null);
+    if (url.includes("/reel/") || url.includes("/tv/")) {
+      setError("Reel and Video downloads are currently not supported. Please paste an Image or Carousel link.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/fetch", {
@@ -174,10 +179,10 @@ export default function Home() {
                         )}
                       </div>
                       
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 pointer-events-none">
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent sm:bg-black/60 sm:inset-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 sm:p-4 pointer-events-none">
                         <button
                           onClick={() => handleDownload(m.url, idx)}
-                          className="pointer-events-auto w-full py-3 bg-white hover:bg-gray-200 text-black font-semibold rounded-xl flex items-center justify-center gap-2 transition-transform transform hover:scale-105 active:scale-95"
+                          className="pointer-events-auto w-full py-2.5 sm:py-3 bg-white hover:bg-gray-200 text-black font-semibold text-sm sm:text-base rounded-lg sm:rounded-xl flex items-center justify-center gap-2 transition-transform transform hover:scale-105 active:scale-95 shadow-lg"
                         >
                           <Download className="w-5 h-5" /> Download
                         </button>
