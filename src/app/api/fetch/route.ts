@@ -20,11 +20,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Could not fetch media. The link might be private or invalid.' }, { status: 404 });
     }
 
-    // Convert to the format expected by our frontend
-    // Frontend expects: { data: { url_list: string[] } }
-    const url_list = result.media.map((m: any) => m.url);
+    // Frontend expects: { data: { media_list: {url: string, type: string}[] } }
+    const media_list = result.media.map((m: any) => ({ 
+      url: m.url.replace(/&amp;/g, '&'), 
+      type: m.type || (m.url.includes('.mp4') ? 'video' : 'image') 
+    }));
 
-    return NextResponse.json({ data: { url_list } }, { status: 200 });
+    return NextResponse.json({ data: { media_list } }, { status: 200 });
   } catch (error: any) {
     console.error('Error fetching instagram url:', error);
     return NextResponse.json({ error: 'Internal server error or blocked by Instagram.' }, { status: 500 });

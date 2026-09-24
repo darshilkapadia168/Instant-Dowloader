@@ -7,7 +7,7 @@ export default function Home() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [media, setMedia] = useState<string[]>([]);
+  const [media, setMedia] = useState<{url: string, type: string}[]>([]);
   const [mediaType, setMediaType] = useState<"video" | "image" | "carousel" | null>(null);
 
   const handleFetch = async (e: React.FormEvent) => {
@@ -32,13 +32,13 @@ export default function Home() {
         throw new Error(data.error || "Failed to fetch media");
       }
 
-      if (data.data && data.data.url_list && data.data.url_list.length > 0) {
-        setMedia(data.data.url_list);
+      if (data.data && data.data.media_list && data.data.media_list.length > 0) {
+        setMedia(data.data.media_list);
         
-        if (data.data.url_list.length > 1) {
+        if (data.data.media_list.length > 1) {
           setMediaType("carousel");
         } else {
-          const isVideo = data.data.url_list[0].includes(".mp4");
+          const isVideo = data.data.media_list[0].type === 'video';
           setMediaType(isVideo ? "video" : "image");
         }
       } else {
@@ -53,7 +53,8 @@ export default function Home() {
 
   const handleDownload = async (urlToDownload: string, index: number) => {
     try {
-      const response = await fetch(urlToDownload);
+      const proxyUrl = `/api/proxy?url=${encodeURIComponent(urlToDownload)}`;
+      const response = await fetch(proxyUrl);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       
@@ -74,7 +75,7 @@ export default function Home() {
   const handleDownloadAll = () => {
     media.forEach((m, idx) => {
       setTimeout(() => {
-        handleDownload(m, idx);
+        handleDownload(m.url, idx);
       }, idx * 500);
     });
   };
@@ -161,21 +162,21 @@ export default function Home() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {media.map((m, idx) => {
-                  const isVideo = m.includes(".mp4");
+                  const isVideo = m.type === "video";
                   return (
                     <div key={idx} className="group relative bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-colors">
                       <div className="aspect-square bg-black flex items-center justify-center overflow-hidden">
                         {isVideo ? (
-                          <video src={m} controls className="w-full h-full object-cover" />
+                          <video src={`/api/proxy?url=${encodeURIComponent(m.url)}`} controls className="w-full h-full object-cover" />
                         ) : (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={m} alt={`Media ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                          <img src={`/api/proxy?url=${encodeURIComponent(m.url)}`} alt={`Media ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                         )}
                       </div>
                       
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 pointer-events-none">
                         <button
-                          onClick={() => handleDownload(m, idx)}
+                          onClick={() => handleDownload(m.url, idx)}
                           className="pointer-events-auto w-full py-3 bg-white hover:bg-gray-200 text-black font-semibold rounded-xl flex items-center justify-center gap-2 transition-transform transform hover:scale-105 active:scale-95"
                         >
                           <Download className="w-5 h-5" /> Download
